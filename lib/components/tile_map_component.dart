@@ -9,14 +9,13 @@ class TileMapComponent extends PositionComponent {
   @override
   Future<void>? onLoad() async{
     
-    tiledMap =  await TiledComponent.load('map.tmx', Vector2.all(32));
+    tiledMap =  await TiledComponent.load('map2.tmx', Vector2.all(32));
     add(tiledMap);
 
     final objGrounp = tiledMap.tileMap.getLayer<ObjectGroup>('ground');
 
     for (var obj in objGrounp!.objects) {
-      print(obj.width.toString()+' '+obj.height.toString());
-      add(Ground(size: Vector2(obj.width, obj.height), position: Vector2(obj.x, obj.y) ));
+      add(Ground(size: Vector2(obj.width, /*obj.height*/ 5 ), position: Vector2(obj.x, obj.y) ));
     }
 
     return super.onLoad();

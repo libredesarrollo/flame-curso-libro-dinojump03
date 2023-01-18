@@ -1,5 +1,8 @@
+import 'package:dinojump03/components/meteor_component.dart';
 import 'package:dinojump03/components/player_component.dart';
 import 'package:dinojump03/components/tile_map_component.dart';
+import 'package:dinojump03/ovelays/game_over.dart';
+import 'package:dinojump03/ovelays/stadistics.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 
@@ -9,6 +12,8 @@ import 'package:flutter/material.dart';
 class MyGame extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {
   double elapsedTime = 0.0;
+  int colisionMeteors = 0;
+  late PlayerComponent player;
 
   @override
   Future<void>? onLoad() {
@@ -16,13 +21,13 @@ class MyGame extends FlameGame
     add(background);
 
     background.loaded.then(
-
       (value) {
-        var player = PlayerComponent(mapSize:  background.tiledMap.size);
+        player = PlayerComponent(mapSize: background.tiledMap.size, game: this);
         add(player);
 
-        //camera.followComponent(player, worldBounds: Rect.fromLTRB(0, 0, background.size.x, background.size.y));
-
+        camera.followComponent(player,
+            worldBounds: Rect.fromLTRB(
+                0, 0, background.tiledMap.size.x, background.tiledMap.size.y));
       },
     );
 
@@ -33,6 +38,12 @@ class MyGame extends FlameGame
 
   @override
   void update(double dt) {
+    if (elapsedTime > 1.0) {
+      add(MeteorComponent(cameraPosition: camera.position));
+      elapsedTime = 0.0;
+    }
+
+    elapsedTime += dt;
     super.update(dt);
   }
 
@@ -44,5 +55,20 @@ class MyGame extends FlameGame
 }
 
 void main() {
-  runApp(GameWidget(game: MyGame()));
+  runApp(GameWidget(
+    game: MyGame(),
+    overlayBuilderMap: {
+      'Statistics': (context, MyGame game) {
+        return Statistics(
+          game: game,
+        );
+      },
+      'GameOver': (context, MyGame game) {
+        return GameOver(
+          game: game,
+        );
+      }
+    },
+    initialActiveOverlays: const ['Statistics'],
+  ));
 }
