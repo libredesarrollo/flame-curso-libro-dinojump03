@@ -9,7 +9,7 @@ class TileMapComponent extends PositionComponent {
   @override
   Future<void>? onLoad() async{
     
-    tiledMap =  await TiledComponent.load('map2.tmx', Vector2.all(32));
+    tiledMap =  await TiledComponent.load('map3.tmx', Vector2.all(32));
     add(tiledMap);
 
     final objGrounp = tiledMap.tileMap.getLayer<ObjectGroup>('ground');

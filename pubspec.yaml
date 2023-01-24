@@ -68,6 +68,7 @@ flutter:
      - assets/images/tile.png
      - assets/tiles/map.tmx
      - assets/tiles/map2.tmx
+     - assets/tiles/map3.tmx
      - assets/tiles/tile.tsx
   #   - images/a_dot_ham.jpeg
 

@@ -40,6 +40,7 @@ class MeteorComponent extends SpriteAnimationComponent with CollisionCallbacks {
 
     hitbox.paint.color = BasicPalette.green.color;
     hitbox.renderShape = false;
+    hitbox.collisionType = CollisionType.passive;
 
     final spriteImage = await Flame.images.load('meteor.png');
     final spriteSheet = SpriteSheet(

@@ -34,9 +34,7 @@ class _GameOverState extends State<GameOver> {
             height: 75,
             child: ElevatedButton(
               onPressed: () {
-                print('hello');
-                widget.game.colisionMeteors = 0;
-                widget.game.player.position = Vector2.all(0);
+                widget.game.player.reset();
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
               child: const Text(

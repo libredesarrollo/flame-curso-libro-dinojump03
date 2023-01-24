@@ -22,7 +22,7 @@ class Character extends SpriteAnimationComponent
   Vector2 velocity = Vector2(0, 0);
 
   final double spriteSheetWidth = 680, spriteSheetHeight = 472;
-  final double jumpForceUp = 300, jumpForceSide = 100, jumpForceXY = 20;
+  final double jumpForceUp = 400, jumpForceSide = 100, jumpForceXY = 20;
 
   bool inGround = false,
       jumpUp = false,

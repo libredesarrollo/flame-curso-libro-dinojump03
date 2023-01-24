@@ -15,6 +15,14 @@ class PlayerComponent extends Character {
   Vector2 mapSize;
   MyGame game;
 
+  bool blockPlayer = false;
+  double blockPlayerTime = 2.0;
+  double blockPlayerElapseTime = 0;
+
+  bool inviciblePlayer = false;
+  double inviciblePlayerTime = 3.0;
+  double inviciblePlayerElapseTime = 0;
+
   PlayerComponent({required this.mapSize, required this.game}) : super() {
     anchor = Anchor.center;
     debugMode = true;
@@ -31,7 +39,7 @@ class PlayerComponent extends Character {
 
     // init animation
     deadAnimation = spriteSheet.createAnimationByLimit(
-        xInit: 0, yInit: 0, step: 8, sizeX: 5, stepTime: .08);
+        xInit: 0, yInit: 0, step: 8, sizeX: 5, stepTime: .08, loop: false);
     idleAnimation = spriteSheet.createAnimationByLimit(
         xInit: 1, yInit: 2, step: 10, sizeX: 5, stepTime: .08);
     jumpAnimation = spriteSheet.createAnimationByLimit(
@@ -44,19 +52,17 @@ class PlayerComponent extends Character {
         xInit: 6, yInit: 2, step: 10, sizeX: 5, stepTime: .32);
     // end animation
 
-    animation = idleAnimation;
-
-    size = Vector2(spriteSheetWidth / 4, spriteSheetHeight / 4);
-
-    position = Vector2(spriteSheetWidth / 4, 0);
+    reset();
 
     body = RectangleHitbox(
-        size: Vector2(spriteSheetWidth / 4 - 70, spriteSheetHeight / 4 ),
-        position: Vector2(25, 0));
+        size: Vector2(spriteSheetWidth / 4 - 70, spriteSheetHeight / 4),
+        position: Vector2(25, 0))
+      ..collisionType = CollisionType.active;
 
     foot = RectangleHitbox(
         size: Vector2(50, 10),
-        position: Vector2(55, spriteSheetHeight / 4 - 20));
+        position: Vector2(55, spriteSheetHeight / 4 - 20))
+      ..collisionType = CollisionType.passive;
 
     add(body);
     add(foot);
@@ -66,12 +72,14 @@ class PlayerComponent extends Character {
 
   @override
   bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-
-   
+    if (blockPlayer) {
+      return true;
+    }
 
     if (keysPressed.isEmpty) {
       animation = idleAnimation;
       movementType = MovementType.idle;
+      velocity = Vector2.all(0);
     }
 
     if (inGround) {
@@ -122,9 +130,10 @@ class PlayerComponent extends Character {
             animation = (movementType == MovementType.walkingright
                 ? walkAnimation
                 : runAnimation);
-            velocity.x = jumpForceUp;
-            position.x += jumpForceXY *
+            velocity.x = jumpForceUp *
                 (movementType == MovementType.walkingright ? 1 : 2);
+            // position.x += jumpForceXY *
+            //     (movementType == MovementType.walkingright ? 1 : 2);
           } else {
             animation = walkSlowAnimation;
           }
@@ -139,9 +148,10 @@ class PlayerComponent extends Character {
                 ? walkAnimation
                 : runAnimation);
             // posX--;
-            velocity.x = -jumpForceUp;
-            position.x -= jumpForceXY *
-                (movementType == MovementType.walkingright ? 1 : 2);
+            velocity.x = -jumpForceUp *
+                (movementType == MovementType.walkingleft ? 1 : 2);
+            // position.x -= jumpForceXY *
+            //     (movementType == MovementType.walkingright ? 1 : 2);
           } else {
             animation = walkSlowAnimation;
           }
@@ -151,7 +161,7 @@ class PlayerComponent extends Character {
         case MovementType.jumpright:
         case MovementType.jumpleft:
           velocity.y = -jumpForceUp;
-          position.y -= jumpForceXY;
+          // position.y -= jumpForceXY;
           inGround = false;
           jumpUp = true;
           animation = jumpAnimation;
@@ -161,7 +171,7 @@ class PlayerComponent extends Character {
 
             if (!collisionXRight) {
               velocity.x = jumpForceSide;
-              position.x += jumpForceXY;
+              // position.x += jumpForceXY;
             }
           } else if (movementType == MovementType.jumpleft) {
             if (right) flipHorizontally();
@@ -169,7 +179,7 @@ class PlayerComponent extends Character {
 
             if (!collisionXLeft) {
               velocity.x = -jumpForceSide;
-              position.x -= jumpForceXY;
+              // position.x -= jumpForceXY;
             }
           }
 
@@ -282,6 +292,22 @@ class PlayerComponent extends Character {
 
   @override
   void update(double dt) {
+    if (blockPlayer) {
+      if (blockPlayerElapseTime > blockPlayerTime) {
+        blockPlayer = false;
+        blockPlayerElapseTime = 0.0;
+      }
+      blockPlayerElapseTime+=dt;
+    }
+
+    if (inviciblePlayer) {
+      if (inviciblePlayerElapseTime > inviciblePlayerTime) {
+        inviciblePlayer = false;
+        inviciblePlayerElapseTime = 0.0;
+      }
+      inviciblePlayerElapseTime+=dt;
+    }
+
     if (!inGround) {
       // en el aire
 
@@ -290,8 +316,12 @@ class PlayerComponent extends Character {
       }
 
       velocity.y += gravity;
-      position += velocity * dt;
+      //
+    } else {
+      velocity.y = 0;
     }
+
+    position += velocity * dt;
 
     super.update(dt);
   }
@@ -313,7 +343,11 @@ class PlayerComponent extends Character {
 
     if (other is Ground && !jumpUp && foot.isColliding) {
       inGround = true;
-      velocity = Vector2.all(0);
+      //velocity = Vector2.all(0);
+    }
+
+    if (game.colisionMeteors >= 3 && !inviciblePlayer) {
+      reset(dead: true);
     }
 
     super.onCollision(points, other);
@@ -328,21 +362,33 @@ class PlayerComponent extends Character {
       jumpAnimation.reset();
     }
 
-    if(other is MeteorComponent && body.isColliding){
+    if (other is MeteorComponent && !inviciblePlayer /*&& body.isColliding*/) {
       game.colisionMeteors++;
-      print('colision ${game.colisionMeteors}');
-
-      //game.overlays.remove('Statistics');
-      //game.overlays.add('Statistics');
-
-        // game.overlays.removeAll(['Statistics','GameOver']);
-        // game.overlays.addAll(['Statistics','GameOver']);
-        // // game.overlays.clear();
-        // print(game.overlays.isActive('Statistics'));
- 
-
+      game.overlays.remove('Statistics');
+      game.overlays.add('Statistics');
     }
 
     super.onCollisionEnd(other);
+  }
+
+  void reset({bool dead = false}) {
+    blockPlayer = true;
+    inviciblePlayer = true;
+    movementType = MovementType.idle;
+    if (dead) {
+      animation = deadAnimation;
+      deadAnimation.onComplete = () {
+        deadAnimation.reset();
+        animation = idleAnimation;
+        position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
+      };
+    } else {
+      animation = idleAnimation;
+      position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
+      size = Vector2(spriteSheetWidth / 4, spriteSheetHeight / 4);
+    }
+    game.colisionMeteors = 0;
+
+    //position = Vector2(spriteSheetWidth / 4, 0);
   }
 }
