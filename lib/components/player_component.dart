@@ -1,5 +1,6 @@
 import 'package:dinojump03/components/ground.dart';
 import 'package:dinojump03/components/meteor_component.dart';
+import 'package:dinojump03/consumibles/life.dart';
 import 'package:dinojump03/main.dart';
 import 'package:flutter/services.dart';
 
@@ -297,7 +298,7 @@ class PlayerComponent extends Character {
         blockPlayer = false;
         blockPlayerElapseTime = 0.0;
       }
-      blockPlayerElapseTime+=dt;
+      blockPlayerElapseTime += dt;
     }
 
     if (inviciblePlayer) {
@@ -305,7 +306,7 @@ class PlayerComponent extends Character {
         inviciblePlayer = false;
         inviciblePlayerElapseTime = 0.0;
       }
-      inviciblePlayerElapseTime+=dt;
+      inviciblePlayerElapseTime += dt;
     }
 
     if (!inGround) {
@@ -344,6 +345,13 @@ class PlayerComponent extends Character {
     if (other is Ground && !jumpUp && foot.isColliding) {
       inGround = true;
       //velocity = Vector2.all(0);
+    }
+
+    if (other is Life && game.colisionMeteors > 0) {
+      game.colisionMeteors--;
+      game.overlays.remove('Statistics');
+      game.overlays.add('Statistics');
+      other.removeFromParent();
     }
 
     if (game.colisionMeteors >= 3 && !inviciblePlayer) {
@@ -388,6 +396,7 @@ class PlayerComponent extends Character {
       size = Vector2(spriteSheetWidth / 4, spriteSheetHeight / 4);
     }
     game.colisionMeteors = 0;
+    game.addConsumibles();
 
     //position = Vector2(spriteSheetWidth / 4, 0);
   }

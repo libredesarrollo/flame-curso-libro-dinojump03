@@ -14,10 +14,11 @@ class MyGame extends FlameGame
   double elapsedTime = 0.0;
   int colisionMeteors = 0;
   late PlayerComponent player;
+  late TileMapComponent background;
 
   @override
   Future<void>? onLoad() {
-    var background = TileMapComponent();
+    background = TileMapComponent();
     add(background);
 
     background.loaded.then(
@@ -52,6 +53,11 @@ class MyGame extends FlameGame
     super.backgroundColor();
     return Colors.purple;
   }
+
+  void addConsumibles() {
+    background.addConsumibles();
+  }
+
 }
 
 void main() {
