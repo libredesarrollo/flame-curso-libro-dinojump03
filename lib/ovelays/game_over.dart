@@ -35,6 +35,7 @@ class _GameOverState extends State<GameOver> {
             child: ElevatedButton(
               onPressed: () {
                 widget.game.player.reset();
+                widget.game.overlays.remove('GameOver');
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
               child: const Text(

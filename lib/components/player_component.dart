@@ -1,6 +1,10 @@
 import 'package:dinojump03/components/ground.dart';
 import 'package:dinojump03/components/meteor_component.dart';
+import 'package:dinojump03/components/character.dart';
+import 'package:dinojump03/utils/create_animation_by_limit.dart';
 import 'package:dinojump03/consumibles/life.dart';
+import 'package:dinojump03/consumibles/shield.dart';
+import 'package:dinojump03/consumibles/win.dart';
 import 'package:dinojump03/main.dart';
 import 'package:flutter/services.dart';
 
@@ -8,9 +12,6 @@ import 'package:flame/collisions.dart';
 import 'package:flame/sprite.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/components.dart';
-
-import 'package:dinojump03/components/character.dart';
-import 'package:dinojump03/utils/create_animation_by_limit.dart';
 
 class PlayerComponent extends Character {
   Vector2 mapSize;
@@ -21,7 +22,7 @@ class PlayerComponent extends Character {
   double blockPlayerElapseTime = 0;
 
   bool inviciblePlayer = false;
-  double inviciblePlayerTime = 3.0;
+  double inviciblePlayerTime = 8.0;
   double inviciblePlayerElapseTime = 0;
 
   PlayerComponent({required this.mapSize, required this.game}) : super() {
@@ -354,6 +355,16 @@ class PlayerComponent extends Character {
       other.removeFromParent();
     }
 
+    if (other is Shield) {
+      inviciblePlayer = true;
+      other.removeFromParent();
+    }
+
+    if (other is Win) {
+      game.paused = true;
+      game.overlays.add('GameOver');
+    }
+
     if (game.colisionMeteors >= 3 && !inviciblePlayer) {
       reset(dead: true);
     }
@@ -380,6 +391,10 @@ class PlayerComponent extends Character {
   }
 
   void reset({bool dead = false}) {
+    game.overlays.remove('Statistics');
+    game.overlays.add('Statistics');
+    velocity = Vector2.all(0);
+    game.paused = false;
     blockPlayer = true;
     inviciblePlayer = true;
     movementType = MovementType.idle;
