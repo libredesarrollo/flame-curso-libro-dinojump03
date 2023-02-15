@@ -18,11 +18,11 @@ class Character extends SpriteAnimationComponent
   
   MovementType movementType = MovementType.idle;
 
-  double gravity = 9.8;
+  double gravity = 15;
   Vector2 velocity = Vector2(0, 0);
 
   final double spriteSheetWidth = 680, spriteSheetHeight = 472;
-  final double jumpForceUp = 400, jumpForceSide = 100, jumpForceXY = 20;
+  final double jumpForceUp = 600, jumpForceSide = 100, jumpForceXY = 20;
 
   bool inGround = false,
       jumpUp = false,

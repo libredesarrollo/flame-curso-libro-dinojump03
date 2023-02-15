@@ -111,183 +111,88 @@ class PlayerComponent extends Character {
       if (keysPressed.contains(LogicalKeyboardKey.arrowUp) ||
           keysPressed.contains(LogicalKeyboardKey.keyW)) {
         movementType = MovementType.jump;
-        if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
-            keysPressed.contains(LogicalKeyboardKey.keyD)) {
-          // RIGHT
-          movementType = MovementType.jumpright;
-        } else if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
-            keysPressed.contains(LogicalKeyboardKey.keyA)) {
-          // LEFT
-          movementType = MovementType.jumpleft;
-        }
       }
-
-      switch (movementType) {
-        case MovementType.walkingright:
-        case MovementType.runright:
-          if (!right) flipHorizontally();
-          right = true;
-
-          if (!collisionXRight) {
-            animation = (movementType == MovementType.walkingright
-                ? walkAnimation
-                : runAnimation);
-            velocity.x = jumpForceUp *
-                (movementType == MovementType.walkingright ? 1 : 2);
-            // position.x += jumpForceXY *
-            //     (movementType == MovementType.walkingright ? 1 : 2);
-          } else {
-            animation = walkSlowAnimation;
-          }
-          break;
-        case MovementType.walkingleft:
-        case MovementType.runleft:
-          if (right) flipHorizontally();
-          right = false;
-
-          if (!collisionXLeft) {
-            animation = (movementType == MovementType.walkingleft
-                ? walkAnimation
-                : runAnimation);
-            // posX--;
-            velocity.x = -jumpForceUp *
-                (movementType == MovementType.walkingleft ? 1 : 2);
-            // position.x -= jumpForceXY *
-            //     (movementType == MovementType.walkingright ? 1 : 2);
-          } else {
-            animation = walkSlowAnimation;
-          }
-
-          break;
-        case MovementType.jump:
-        case MovementType.jumpright:
-        case MovementType.jumpleft:
-          velocity.y = -jumpForceUp;
-          // position.y -= jumpForceXY;
-          inGround = false;
-          jumpUp = true;
-          animation = jumpAnimation;
-          if (movementType == MovementType.jumpright) {
-            if (!right) flipHorizontally();
-            right = true;
-
-            if (!collisionXRight) {
-              velocity.x = jumpForceSide;
-              // position.x += jumpForceXY;
-            }
-          } else if (movementType == MovementType.jumpleft) {
-            if (right) flipHorizontally();
-            right = false;
-
-            if (!collisionXLeft) {
-              velocity.x = -jumpForceSide;
-              // position.x -= jumpForceXY;
-            }
-          }
-
-          break;
-        case MovementType.idle:
-          break;
-      }
-
-      // solo puede saltar o caminar/correr si el player esta en el piso
-      //***X */
-      // correr
-      /*   if ((keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
-              keysPressed.contains(LogicalKeyboardKey.keyD)) &&
-          keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
-        if (!right) flipHorizontally();
-        right = true;
-
-        if (!collisionXRight) {
-          animation = runAnimation;
-          // posX++;
-          velocity.x = jumpForceUp;
-          position.x += jumpForceXY * 2;
-        } else {
-          animation = walkSlowAnimation;
-        }
-      } else if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
+    } else {
+      if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
           keysPressed.contains(LogicalKeyboardKey.keyD)) {
-        if (!right) flipHorizontally();
-        right = true;
-
-        if (!collisionXRight) {
-          animation = walkAnimation;
-          //posX++;
-          velocity.x = jumpForceUp;
-          position.x += jumpForceXY;
-        } else {
-          animation = walkSlowAnimation;
-        }
-      }
-
-      if ((keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
-              keysPressed.contains(LogicalKeyboardKey.keyA)) &&
-          keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
-        if (right) flipHorizontally();
-        right = false;
-
-        if (!collisionXLeft) {
-          animation = runAnimation;
-          // posX--;
-          velocity.x = -jumpForceUp;
-          position.x -= jumpForceXY * 2;
-        } else {
-          animation = walkSlowAnimation;
-        }
+        // RIGHT
+        movementType = MovementType.jumpright;
       } else if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
           keysPressed.contains(LogicalKeyboardKey.keyA)) {
-        if (right) flipHorizontally();
-        right = false;
+        // LEFT
+        movementType = MovementType.jumpleft;
+      }
+    }
 
-        if (!collisionXLeft) {
-          animation = walkAnimation;
-          velocity.x = -jumpForceUp;
-          position.x -= jumpForceXY;
+    switch (movementType) {
+      case MovementType.walkingright:
+      case MovementType.runright:
+        if (!right) flipHorizontally();
+        right = true;
+
+        if (!collisionXRight && position.x < mapSize.x) {
+          animation = (movementType == MovementType.walkingright
+              ? walkAnimation
+              : runAnimation);
+          velocity.x =
+              jumpForceUp * (movementType == MovementType.walkingright ? 1 : 2);
+          // position.x += jumpForceXY *
+          //     (movementType == MovementType.walkingright ? 1 : 2);
         } else {
           animation = walkSlowAnimation;
         }
-      }
+        break;
+      case MovementType.walkingleft:
+      case MovementType.runleft:
+        if (right) flipHorizontally();
+        right = false;
 
-      //***Y */
-      if (keysPressed.contains(LogicalKeyboardKey.arrowUp) ||
-          keysPressed.contains(LogicalKeyboardKey.keyW)) {
-        animation = walkAnimation;
-        velocity.y = -jumpForceUp;
-        position.y -= jumpForceXY;
+        if (!collisionXLeft && position.x > 0) {
+          animation = (movementType == MovementType.walkingleft
+              ? walkAnimation
+              : runAnimation);
+          // posX--;
+          velocity.x =
+              -jumpForceUp * (movementType == MovementType.walkingleft ? 1 : 2);
+          // position.x -= jumpForceXY *
+          //     (movementType == MovementType.walkingright ? 1 : 2);
+        } else {
+          animation = walkSlowAnimation;
+        }
+
+        break;
+      case MovementType.jump:
+      case MovementType.jumpright:
+      case MovementType.jumpleft:
+        if (inGround) {
+          velocity.y = -jumpForceUp;
+        }
+        // position.y -= jumpForceXY;
         inGround = false;
         jumpUp = true;
         animation = jumpAnimation;
-
-        if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
-            keysPressed.contains(LogicalKeyboardKey.keyA)) {
-          if (right) flipHorizontally();
-          right = false;
-
-          if (!collisionXLeft) {
-            velocity.x = -jumpForceSide;
-            position.x -= jumpForceXY;
-          }
-        } else if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
-            keysPressed.contains(LogicalKeyboardKey.keyD)) {
+        if (movementType == MovementType.jumpright) {
           if (!right) flipHorizontally();
           right = true;
 
-          if (!collisionXRight) {
+          if (!collisionXRight  && position.x < mapSize.x) {
             velocity.x = jumpForceSide;
-            position.x += jumpForceXY;
+            // position.x += jumpForceXY;
+          }
+        } else if (movementType == MovementType.jumpleft) {
+          if (right) flipHorizontally();
+          right = false;
+
+          if (!collisionXLeft && position.x > 0) {
+            velocity.x = -jumpForceSide;
+            // position.x -= jumpForceXY;
           }
         }
-      }*/
+
+        break;
+      case MovementType.idle:
+        break;
     }
-
-    // if (keysPressed.contains(LogicalKeyboardKey.arrowDown) ||
-    //     keysPressed.contains(LogicalKeyboardKey.keyS)) {
-    //   animation = walkAnimation;
-
-    //   posY++;
-    // }
 
     return true;
   }
@@ -334,11 +239,8 @@ class PlayerComponent extends Character {
       if (points.first[0] <= 0.0) {
         // left
         collisionXLeft = true;
-      } else if (points.first[0] >= mapSize.x
-          //MediaQueryData.fromWindow(window).size.height
-
-          ) {
-        // left
+      } else if (points.first[0] >= mapSize.x) {
+        // right
         collisionXRight = true;
       }
     }
@@ -374,7 +276,10 @@ class PlayerComponent extends Character {
 
   @override
   void onCollisionEnd(PositionComponent other) {
-    collisionXLeft = collisionXRight = false;
+    
+    if(other is ScreenHitbox){
+      collisionXLeft = collisionXRight = false;
+    }
 
     if (other is Ground) {
       inGround = false;

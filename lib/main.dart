@@ -1,13 +1,16 @@
+
+import 'package:flutter/material.dart';
+
+import 'package:flame/game.dart';
+import 'package:flame/input.dart';
+import 'package:flame/collisions.dart';
+
 import 'package:dinojump03/components/meteor_component.dart';
 import 'package:dinojump03/components/player_component.dart';
+import 'package:dinojump03/components/sky_component.dart';
 import 'package:dinojump03/components/tile_map_component.dart';
 import 'package:dinojump03/ovelays/game_over.dart';
 import 'package:dinojump03/ovelays/stadistics.dart';
-import 'package:flame/game.dart';
-import 'package:flame/input.dart';
-
-import 'package:flame/collisions.dart';
-import 'package:flutter/material.dart';
 
 class MyGame extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {
@@ -19,6 +22,7 @@ class MyGame extends FlameGame
   @override
   Future<void>? onLoad() {
     background = TileMapComponent();
+    add(SkyComponent());
     add(background);
 
     background.loaded.then(
@@ -34,7 +38,7 @@ class MyGame extends FlameGame
 
     add(ScreenHitbox());
 
-    return super.onLoad();
+    //return super.onLoad();
   }
 
   @override
