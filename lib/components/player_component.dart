@@ -245,8 +245,10 @@ class PlayerComponent extends Character {
       }
     }
 
-    if (other is Ground && !jumpUp && foot.isColliding) {
+    if (other is Ground && !jumpUp && foot.isColliding && !inGround) {
       inGround = true;
+      position.y = other.position.y - size.y / 2 + 10;
+
       //velocity = Vector2.all(0);
     }
 
