@@ -12,16 +12,16 @@ import 'package:flame/components.dart';
 import 'package:dinojump03/utils/create_animation_by_limit.dart';
 
 class MeteorComponent extends SpriteAnimationComponent with CollisionCallbacks {
-
   Vector2 cameraPosition;
 
-  MeteorComponent( { required this.cameraPosition } ):super(){
-    debugMode= true;
+  MeteorComponent({required this.cameraPosition}) : super() {
+    debugMode = true;
+    // scale = Vector2.all(0.5);
   }
 
   static const int circleSpeed = 500;
   static const double circleWidth = 100.0, circleHeight = 100.0;
-  
+
   Random random = Random();
 
   late double screenWidth, screenHeight;
@@ -35,7 +35,8 @@ class MeteorComponent extends SpriteAnimationComponent with CollisionCallbacks {
     screenWidth = MediaQueryData.fromWindow(window).size.width;
     screenHeight = MediaQueryData.fromWindow(window).size.height;
 
-    position = Vector2(random.nextDouble() * screenWidth + cameraPosition.x, cameraPosition.y -circleHeight);
+    position = Vector2(random.nextDouble() * screenWidth + cameraPosition.x,
+        cameraPosition.y - circleHeight);
     size = Vector2(circleWidth, circleHeight);
 
     hitbox.paint.color = BasicPalette.green.color;
@@ -60,7 +61,7 @@ class MeteorComponent extends SpriteAnimationComponent with CollisionCallbacks {
   void update(double dt) {
     position.y += circleSpeed * dt;
 
-    if(position.y > cameraPosition.y + screenHeight){
+    if (position.y > cameraPosition.y + screenHeight) {
       removeFromParent();
     }
 
@@ -69,9 +70,7 @@ class MeteorComponent extends SpriteAnimationComponent with CollisionCallbacks {
 
   @override
   void onCollision(Set<Vector2> points, PositionComponent other) {
-    if (other is ScreenHitbox) {
-      
-    }
+    if (other is ScreenHitbox) {}
 
     super.onCollision(points, other);
   }

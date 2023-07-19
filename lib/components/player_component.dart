@@ -25,9 +25,13 @@ class PlayerComponent extends Character {
   double inviciblePlayerTime = 8.0;
   double inviciblePlayerElapseTime = 0;
 
+  late SpriteAnimationTicker deadAnimationTicker;
+
   PlayerComponent({required this.mapSize, required this.game}) : super() {
     anchor = Anchor.center;
+    // anchor = Anchor.bottomLeft;
     debugMode = true;
+    // scale = 0.5;
   }
 
   int count = 0;
@@ -54,6 +58,8 @@ class PlayerComponent extends Character {
         xInit: 6, yInit: 2, step: 10, sizeX: 5, stepTime: .32);
     // end animation
 
+    deadAnimationTicker = deadAnimation.createTicker();
+
     reset();
 
     body = RectangleHitbox(
@@ -68,6 +74,29 @@ class PlayerComponent extends Character {
 
     add(body);
     add(foot);
+
+    // // // // // // // deadAnimationTicker.onComplete = () {
+    // // // // // // //   // deadAnimation.reset();
+    // // // // // // //   print("-----");
+    // // // // // // //   // if (animation == deadAnimation) {
+    // // // // // // //   //   print("-----deadAnimation");
+    // // // // // // //   animation = idleAnimation;
+    // // // // // // //   position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
+    // // // // // // //   // }
+    // // // // // // // };
+
+    // // // // // // // deadAnimationTicker.onFrame = (index) {
+    // // // // // // //   // print("-----" + index.toString());
+    // // // // // // //   if (deadAnimationTicker.isLastFrame) {
+    // // // // // // //     print("-----LASSSS");
+    // // // // // // //     animation = idleAnimation;
+    // // // // // // //     // // // animationTicker = deadAnimation.createTicker();
+    // // // // // // //     position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
+    // // // // // // //     size = Vector2(spriteSheetWidth / 4, spriteSheetHeight / 4);
+    // // // // // // //     // animationTicker.
+    // // // // // // //     // Do something for the second frame.
+    // // // // // // //   }
+    // // // // // // // };
 
     return super.onLoad();
   }
@@ -175,7 +204,7 @@ class PlayerComponent extends Character {
           if (!right) flipHorizontally();
           right = true;
 
-          if (!collisionXRight  && position.x < mapSize.x) {
+          if (!collisionXRight && position.x < mapSize.x) {
             velocity.x = jumpForceSide;
             // position.x += jumpForceXY;
           }
@@ -230,6 +259,8 @@ class PlayerComponent extends Character {
 
     position += velocity * dt;
 
+    deadAnimationTicker.update(dt);
+
     super.update(dt);
   }
 
@@ -278,14 +309,13 @@ class PlayerComponent extends Character {
 
   @override
   void onCollisionEnd(PositionComponent other) {
-    
-    if(other is ScreenHitbox){
+    if (other is ScreenHitbox) {
       collisionXLeft = collisionXRight = false;
     }
 
     if (other is Ground) {
       inGround = false;
-      jumpAnimation.reset();
+      //jumpAnimation.reset();
     }
 
     if (other is MeteorComponent && !inviciblePlayer /*&& body.isColliding*/) {
@@ -297,7 +327,7 @@ class PlayerComponent extends Character {
     super.onCollisionEnd(other);
   }
 
-  void reset({bool dead = false}) {
+  void reset({bool dead = false}) async {
     game.overlays.remove('Statistics');
     game.overlays.add('Statistics');
     velocity = Vector2.all(0);
@@ -307,13 +337,68 @@ class PlayerComponent extends Character {
     movementType = MovementType.idle;
     if (dead) {
       animation = deadAnimation;
-      deadAnimation.onComplete = () {
-        deadAnimation.reset();
-        animation = idleAnimation;
-        position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
+
+      // // // animationTicker.onComplete = () {
+      // // //   // deadAnimation.reset();
+      // // //   print("-----");
+      // // //   if (animation == deadAnimation) {
+      // // //     animation = idleAnimation;
+      // // //     position =
+      // // //         Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
+      // // //   }
+      // // // };
+
+      // animationTicker = SpriteAnimationTicker(animation!);
+      // animationTicker = animation!.createTicker();
+      // animationTicker.reset();
+      deadAnimationTicker = deadAnimation.createTicker();
+      deadAnimationTicker.onFrame = (index) {
+        // print("-----" + index.toString());
+        if (deadAnimationTicker.isLastFrame) {
+          print("-----LASSSS");
+          animation = idleAnimation;
+          // // // animationTicker = deadAnimation.createTicker();
+          position =
+              Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
+          size = Vector2(spriteSheetWidth / 4, spriteSheetHeight / 4);
+          // animationTicker.
+          // Do something for the second frame.
+        }
       };
+      // await animationTicker.completed;
+
+      print("-----LASSSS OUT");
+
+      // deadAnimationTicker.onComplete = () {
+      //   deadAnimation.reset();
+      //   print("-----DDDDD");
+      //   if (animation == deadAnimation) {
+      //     print("-----deadAnimation");
+      //   animation = idleAnimation;
+      //   position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
+      //   }
+      // };
+
+      // animationTicker.onComplete = () {
+      //   // deadAnimation.reset();
+      //   print("-----");
+      //   // if (animation == deadAnimation) {
+      //   print("----- deadAnimation");
+      //   animation = idleAnimation;
+      //   position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
+      //   animationTicker.reset();
+
+      //   // }
+      // };
+
+      // deadAnimation.onComplete = () {
+      //   deadAnimation.reset();
+      //   animation = idleAnimation;
+      //   position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
+      // };
     } else {
       animation = idleAnimation;
+      // // // animationTicker = deadAnimation.createTicker();
       position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
       size = Vector2(spriteSheetWidth / 4, spriteSheetHeight / 4);
     }

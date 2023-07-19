@@ -20,10 +20,10 @@ class TileMapComponent extends PositionComponent {
     add(tiledMap);
 
     final objGroup = tiledMap.tileMap.getLayer<ObjectGroup>('ground');
-
+    position = Vector2(0, 0);
     for (var obj in objGroup!.objects) {
       add(Ground(
-          size: Vector2(obj.width, /*obj.height*/ 5),
+          size: Vector2(obj.width, /*obj.height*/ 20),
           position: Vector2(obj.x, obj.y)));
     }
 

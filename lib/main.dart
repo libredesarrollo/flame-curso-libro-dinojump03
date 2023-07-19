@@ -1,4 +1,6 @@
-
+import 'package:flame/camera.dart';
+import 'package:flame/components.dart';
+import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flame/game.dart';
@@ -19,20 +21,42 @@ class MyGame extends FlameGame
   late PlayerComponent player;
   late TileMapComponent background;
 
+  final world = World();
+  late final CameraComponent cameraComponent;
+
   @override
   Future<void>? onLoad() {
     background = TileMapComponent();
     add(SkyComponent());
-    add(background);
+    // add(background);
+    add(world);
+    world.add(background);
 
     background.loaded.then(
       (value) {
         player = PlayerComponent(mapSize: background.tiledMap.size, game: this);
-        add(player);
+        //add(player);
 
-        camera.followComponent(player,
-            worldBounds: Rect.fromLTRB(
-                0, 0, background.tiledMap.size.x, background.tiledMap.size.y));
+        cameraComponent = CameraComponent(world: world);
+        cameraComponent.follow(player);
+
+        cameraComponent.setBounds(Rectangle.fromLTRB(
+            0, 0, background.tiledMap.size.x, background.tiledMap.size.y));
+        cameraComponent.viewfinder.anchor = Anchor.bottomLeft;
+        cameraComponent.viewfinder.position = Vector2.all(500);
+        add(cameraComponent);
+
+        cameraComponent.loaded.then(
+          (value) {
+            // cameraComponent.moveTo(Vector2.all(50));
+          },
+        );
+
+        cameraComponent.world.add(player);
+
+        // camera.followComponent(player,
+        //     worldBounds: Rect.fromLTRB(
+        //         0, 0, background.tiledMap.size.x, background.tiledMap.size.y));
       },
     );
 
@@ -44,7 +68,7 @@ class MyGame extends FlameGame
   @override
   void update(double dt) {
     if (elapsedTime > 1.0) {
-      add(MeteorComponent(cameraPosition: camera.position));
+      add(MeteorComponent(cameraPosition: player.position));
       elapsedTime = 0.0;
     }
 
@@ -61,7 +85,6 @@ class MyGame extends FlameGame
   void addConsumibles() {
     background.addConsumibles();
   }
-
 }
 
 void main() {
