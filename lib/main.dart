@@ -1,13 +1,9 @@
-import 'dart:ui';
-
-import 'package:flame/camera.dart';
-import 'package:flame/components.dart';
-import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';
 
+import 'package:flame/components.dart';
+import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
-import 'package:flame/collisions.dart';
 
 import 'package:dinojump03/components/meteor_component.dart';
 import 'package:dinojump03/components/player_component.dart';
@@ -28,12 +24,11 @@ class MyGame extends FlameGame
   late final CameraComponent cameraComponent;
 
   @override
-  Future<void>? onLoad() {
+  void onLoad() {
     background = TileMapComponent();
-    add(SkyComponent());
-    // add(background);
-    world.debugMode = true;
     add(world);
+
+    world.add(SkyComponent());
     world.add(background);
 
     background.loaded.then(
@@ -43,18 +38,11 @@ class MyGame extends FlameGame
 
         cameraComponent = CameraComponent(world: world);
         cameraComponent.follow(player);
-
         cameraComponent.setBounds(Rectangle.fromLTRB(
             0, 0, background.tiledMap.size.x, background.tiledMap.size.y));
-        cameraComponent.viewfinder.anchor = Anchor.bottomLeft;
-        // cameraComponent.viewfinder.position = Vector2.all(500);
+        // cameraComponent.viewfinder.anchor = Anchor.bottomLeft;
+        cameraComponent.viewfinder.anchor = const Anchor(0.1, 0.9);
         add(cameraComponent);
-
-        cameraComponent.loaded.then(
-          (value) {
-            // cameraComponent.moveTo(Vector2.all(50));
-          },
-        );
 
         cameraComponent.world.add(player);
 
@@ -65,23 +53,18 @@ class MyGame extends FlameGame
     );
 
     add(ScreenHitbox());
-
-    //return super.onLoad();
   }
 
   @override
   void update(double dt) {
     if (elapsedTime > 1.0) {
-      double screenHeight = MediaQueryData.fromWindow(window).size.height;
-      print(cameraComponent.viewport.position.y + screenHeight);
       Vector2 cp = cameraComponent.viewfinder.position;
-      cp.y = -cameraComponent.viewport.position.y + screenHeight;
+
+      cp.y = cameraComponent.viewfinder.position.y -
+          cameraComponent.viewport.size.y;
       world.add(MeteorComponent(cameraPosition: cp));
       elapsedTime = 0.0;
     }
-
-    // print(cameraComponent.viewfinder.position.toString());
-
     elapsedTime += dt;
     super.update(dt);
   }

@@ -338,19 +338,6 @@ class PlayerComponent extends Character {
     if (dead) {
       animation = deadAnimation;
 
-      // // // animationTicker.onComplete = () {
-      // // //   // deadAnimation.reset();
-      // // //   print("-----");
-      // // //   if (animation == deadAnimation) {
-      // // //     animation = idleAnimation;
-      // // //     position =
-      // // //         Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
-      // // //   }
-      // // // };
-
-      // animationTicker = SpriteAnimationTicker(animation!);
-      // animationTicker = animation!.createTicker();
-      // animationTicker.reset();
       deadAnimationTicker = deadAnimation.createTicker();
       deadAnimationTicker.onFrame = (index) {
         // print("-----" + index.toString());
@@ -365,9 +352,6 @@ class PlayerComponent extends Character {
           // Do something for the second frame.
         }
       };
-      // await animationTicker.completed;
-
-      print("-----LASSSS OUT");
 
       // deadAnimationTicker.onComplete = () {
       //   deadAnimation.reset();
@@ -377,24 +361,6 @@ class PlayerComponent extends Character {
       //   animation = idleAnimation;
       //   position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
       //   }
-      // };
-
-      // animationTicker.onComplete = () {
-      //   // deadAnimation.reset();
-      //   print("-----");
-      //   // if (animation == deadAnimation) {
-      //   print("----- deadAnimation");
-      //   animation = idleAnimation;
-      //   position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
-      //   animationTicker.reset();
-
-      //   // }
-      // };
-
-      // deadAnimation.onComplete = () {
-      //   deadAnimation.reset();
-      //   animation = idleAnimation;
-      //   position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
       // };
     } else {
       animation = idleAnimation;
