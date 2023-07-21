@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
@@ -22,6 +24,7 @@ class MyGame extends FlameGame
   late TileMapComponent background;
 
   final world = World();
+
   late final CameraComponent cameraComponent;
 
   @override
@@ -29,6 +32,7 @@ class MyGame extends FlameGame
     background = TileMapComponent();
     add(SkyComponent());
     // add(background);
+    world.debugMode = true;
     add(world);
     world.add(background);
 
@@ -43,7 +47,7 @@ class MyGame extends FlameGame
         cameraComponent.setBounds(Rectangle.fromLTRB(
             0, 0, background.tiledMap.size.x, background.tiledMap.size.y));
         cameraComponent.viewfinder.anchor = Anchor.bottomLeft;
-        cameraComponent.viewfinder.position = Vector2.all(500);
+        // cameraComponent.viewfinder.position = Vector2.all(500);
         add(cameraComponent);
 
         cameraComponent.loaded.then(
@@ -68,9 +72,15 @@ class MyGame extends FlameGame
   @override
   void update(double dt) {
     if (elapsedTime > 1.0) {
-      add(MeteorComponent(cameraPosition: player.position));
+      double screenHeight = MediaQueryData.fromWindow(window).size.height;
+      print(cameraComponent.viewport.position.y + screenHeight);
+      Vector2 cp = cameraComponent.viewfinder.position;
+      cp.y = -cameraComponent.viewport.position.y + screenHeight;
+      world.add(MeteorComponent(cameraPosition: cp));
       elapsedTime = 0.0;
     }
+
+    // print(cameraComponent.viewfinder.position.toString());
 
     elapsedTime += dt;
     super.update(dt);
