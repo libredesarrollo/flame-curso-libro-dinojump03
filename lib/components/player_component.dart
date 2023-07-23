@@ -75,29 +75,6 @@ class PlayerComponent extends Character {
     add(body);
     add(foot);
 
-    // // // // // // // deadAnimationTicker.onComplete = () {
-    // // // // // // //   // deadAnimation.reset();
-    // // // // // // //   print("-----");
-    // // // // // // //   // if (animation == deadAnimation) {
-    // // // // // // //   //   print("-----deadAnimation");
-    // // // // // // //   animation = idleAnimation;
-    // // // // // // //   position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
-    // // // // // // //   // }
-    // // // // // // // };
-
-    // // // // // // // deadAnimationTicker.onFrame = (index) {
-    // // // // // // //   // print("-----" + index.toString());
-    // // // // // // //   if (deadAnimationTicker.isLastFrame) {
-    // // // // // // //     print("-----LASSSS");
-    // // // // // // //     animation = idleAnimation;
-    // // // // // // //     // // // animationTicker = deadAnimation.createTicker();
-    // // // // // // //     position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
-    // // // // // // //     size = Vector2(spriteSheetWidth / 4, spriteSheetHeight / 4);
-    // // // // // // //     // animationTicker.
-    // // // // // // //     // Do something for the second frame.
-    // // // // // // //   }
-    // // // // // // // };
-
     return super.onLoad();
   }
 

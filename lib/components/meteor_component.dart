@@ -11,7 +11,8 @@ import 'package:flame/components.dart';
 
 import 'package:dinojump03/utils/create_animation_by_limit.dart';
 
-class MeteorComponent extends SpriteAnimationComponent with CollisionCallbacks {
+class MeteorComponent extends SpriteAnimationComponent
+    with CollisionCallbacks, HasGameRef {
   Vector2 cameraPosition;
 
   MeteorComponent({required this.cameraPosition}) : super() {
@@ -32,8 +33,11 @@ class MeteorComponent extends SpriteAnimationComponent with CollisionCallbacks {
 
   @override
   Future<void>? onLoad() async {
-    screenWidth = MediaQueryData.fromWindow(window).size.width;
-    screenHeight = MediaQueryData.fromWindow(window).size.height;
+    // screenWidth = MediaQueryData.fromWindow(window).size.width;
+    // screenHeight = MediaQueryData.fromWindow(window).size.height;
+
+    screenWidth = gameRef.size.x;
+    screenHeight = gameRef.size.y;
 
     position = Vector2(random.nextDouble() * screenWidth + cameraPosition.x,
         cameraPosition.y - circleHeight);
