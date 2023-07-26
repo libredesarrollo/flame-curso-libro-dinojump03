@@ -31,7 +31,7 @@ class PlayerComponent extends Character {
     anchor = Anchor.center;
     // anchor = Anchor.bottomLeft;
     debugMode = true;
-    // scale = 0.5;
+    // scale = Vector2.all(.5);
   }
 
   int count = 0;

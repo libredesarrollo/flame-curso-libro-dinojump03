@@ -57,6 +57,7 @@ class MeteorComponent extends SpriteAnimationComponent
         xInit: 0, yInit: 0, step: 4, sizeX: 4, stepTime: .08);
 
     add(hitbox);
+    // scale = Vector2.all(.5);
 
     return super.onLoad();
   }
