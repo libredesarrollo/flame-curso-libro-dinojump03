@@ -44,7 +44,7 @@ class MyGame extends FlameGame
         cameraComponent.viewfinder.anchor = const Anchor(0.1, 0.9);
         add(cameraComponent);
 
-        cameraComponent.world.add(player);
+        world.add(player);
 
         // camera.followComponent(player,
         //     worldBounds: Rect.fromLTRB(
