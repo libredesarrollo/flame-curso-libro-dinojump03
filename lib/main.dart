@@ -12,6 +12,9 @@ import 'package:dinojump03/components/tile_map_component.dart';
 import 'package:dinojump03/ovelays/game_over.dart';
 import 'package:dinojump03/ovelays/stadistics.dart';
 
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flame_audio/flame_audio.dart';
+
 class MyGame extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {
   double elapsedTime = 0.0;
@@ -41,7 +44,7 @@ class MyGame extends FlameGame
         cameraComponent.setBounds(Rectangle.fromLTRB(
             0, 0, background.tiledMap.size.x, background.tiledMap.size.y));
         // cameraComponent.viewfinder.anchor = Anchor.bottomLeft;
-        cameraComponent.viewfinder.anchor = const Anchor(0.1, 0.9);
+        cameraComponent.viewfinder.anchor = const Anchor(0.4, 0.4);
         add(cameraComponent);
 
         world.add(player);
@@ -52,6 +55,7 @@ class MyGame extends FlameGame
       },
     );
 
+    startBgMusic();
     add(ScreenHitbox());
   }
 
@@ -77,6 +81,17 @@ class MyGame extends FlameGame
 
   void addConsumibles() {
     background.addConsumibles();
+  }
+
+  @override
+  void onRemove() {
+    FlameAudio.bgm.stop();
+    super.onRemove();
+  }
+
+  void startBgMusic() {
+    FlameAudio.bgm.initialize();
+    FlameAudio.bgm.play('background.wav', volume: 0.1);
   }
 }
 

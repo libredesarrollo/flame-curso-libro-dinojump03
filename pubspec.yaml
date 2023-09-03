@@ -38,7 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flame: 
   flame_tiled: 
-  gamepads:
+  flame_audio: 
 
 dev_dependencies:
   flutter_test:
@@ -76,6 +76,11 @@ flutter:
      - assets/tiles/map3.tmx
      - assets/tiles/tile.tsx
   #   - images/a_dot_ham.jpeg
+     - assets/audio/explosion.wav
+     - assets/audio/background.wav
+     - assets/audio/die.mp3
+     - assets/audio/jump.wav
+     - assets/audio/step.wav
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

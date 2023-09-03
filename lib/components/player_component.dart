@@ -6,12 +6,16 @@ import 'package:dinojump03/consumibles/life.dart';
 import 'package:dinojump03/consumibles/shield.dart';
 import 'package:dinojump03/consumibles/win.dart';
 import 'package:dinojump03/main.dart';
+
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/sprite.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/components.dart';
+
+import 'package:flame_audio/flame_audio.dart';
 
 class PlayerComponent extends Character {
   Vector2 mapSize;
@@ -25,7 +29,12 @@ class PlayerComponent extends Character {
   double inviciblePlayerTime = 8.0;
   double inviciblePlayerElapseTime = 0;
 
+  final double terminalVelocity = 150;
+
   late SpriteAnimationTicker deadAnimationTicker;
+
+  bool isMoving = false;
+  late AudioPlayer audioPlayerRunning;
 
   PlayerComponent({required this.mapSize, required this.game}) : super() {
     anchor = Anchor.center;
@@ -63,17 +72,24 @@ class PlayerComponent extends Character {
     reset();
 
     body = RectangleHitbox(
-        size: Vector2(spriteSheetWidth / 4 - 70, spriteSheetHeight / 4),
-        position: Vector2(25, 0))
-      ..collisionType = CollisionType.active;
+        size: Vector2(spriteSheetWidth / 4 - 70, spriteSheetHeight / 4 - 20),
+        position: Vector2(25, 10))
+      ..collisionType = CollisionType.active
+      ..debugMode = true
+      ..debugColor = Colors.orange;
 
-    foot = RectangleHitbox(
-        size: Vector2(50, 10),
-        position: Vector2(55, spriteSheetHeight / 4 - 20))
-      ..collisionType = CollisionType.passive;
+    FlameAudio.loop('step.wav').then((audioPlayer) {
+      audioPlayerRunning = audioPlayer;
+      audioPlayerRunning.stop();
+    });
+
+    // foot = RectangleHitbox(
+    //     size: Vector2(50, 10),
+    //     position: Vector2(55, spriteSheetHeight / 4 - 20))
+    //   ..collisionType = CollisionType.passive;
 
     add(body);
-    add(foot);
+    // add(foot);
 
     return super.onLoad();
   }
@@ -88,6 +104,15 @@ class PlayerComponent extends Character {
       animation = idleAnimation;
       movementType = MovementType.idle;
       velocity = Vector2.all(0);
+      if (audioPlayerRunning.state == PlayerState.playing) {
+        audioPlayerRunning.stop();
+      }
+    } else {
+      if (!isMoving) {
+        if (audioPlayerRunning.state == PlayerState.stopped) {
+          audioPlayerRunning.resume();
+        }
+      }
     }
 
     if (inGround) {
@@ -234,12 +259,15 @@ class PlayerComponent extends Character {
       velocity.y = 0;
     }
 
+    velocity.y = velocity.y.clamp(-jumpForceUp, terminalVelocity);
     position += velocity * dt;
 
     deadAnimationTicker.update(dt);
 
     super.update(dt);
   }
+
+  final Vector2 fromAbove = Vector2(0, -1);
 
   @override
   void onCollision(Set<Vector2> points, PositionComponent other) {
@@ -253,14 +281,41 @@ class PlayerComponent extends Character {
       }
     }
 
-    if (other is Ground && !jumpUp && foot.isColliding && !inGround) {
-      inGround = true;
-      position.y = other.position.y - size.y / 2 + 10;
+    if (other is Ground && !jumpUp && !inGround) {
+      if (points.length == 2) {
+        // separation distance
+        // punto Ground + Punto Player / 2
+        final mid = (points.elementAt(0) + points.elementAt(1)) / 2;
 
+        // distancia entre el centro de la colision y el centro del componente
+        final collisionNormal = absoluteCenter - mid;
+
+        // collisionNormal.length devuelve la magnitud del vector, se emplea para saber
+        // cual es la longitud del vector es decir, cuanto mide
+        // es decir, cuanto hay de un extremo al otro extremo
+        // es decir de un punto al otro punto
+        final separationDistance = (size.y / 2) - collisionNormal.length - 10;
+        collisionNormal.normalize(); //convierte a un vector unitario
+
+        // If collision normal is almost upwards,
+        final v = fromAbove.dot(collisionNormal);
+        print(v.toString());
+        if (v > 0.9) {
+          inGround = true;
+          // Resolve collision by moving player along
+          // collision normal by separation distance.
+          // collisionNormal.scale(separationDistance);
+          position += collisionNormal.scaled(separationDistance);
+        }
+      }
+
+      // inGround = true;
+      // position.y = other.position.y - size.y / 2 + 10;
       //velocity = Vector2.all(0);
     }
 
     if (other is Life && game.colisionMeteors > 0) {
+      FlameAudio.play('explosion.wav');
       game.colisionMeteors--;
       game.overlays.remove('Statistics');
       game.overlays.add('Statistics');
@@ -279,6 +334,7 @@ class PlayerComponent extends Character {
 
     if (game.colisionMeteors >= 3 && !inviciblePlayer) {
       reset(dead: true);
+      FlameAudio.play('die.mp3');
     }
 
     super.onCollision(points, other);
