@@ -18,7 +18,7 @@ import 'package:flame_audio/flame_audio.dart';
 class MyGame extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {
   double elapsedTime = 0.0;
-  int colisionMeteors = 0;
+  int collisionMeteors = 0;
   late PlayerComponent player;
   late TileMapComponent background;
 

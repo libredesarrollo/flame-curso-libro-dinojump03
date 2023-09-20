@@ -270,7 +270,7 @@ class PlayerComponent extends Character {
   final Vector2 fromAbove = Vector2(0, -1);
 
   @override
-  void onCollision(Set<Vector2> points, PositionComponent other) {
+  void onCollisionStart(Set<Vector2> points, PositionComponent other) {
     if (other is ScreenHitbox) {
       if (points.first[0] <= 0.0) {
         // left
@@ -314,9 +314,9 @@ class PlayerComponent extends Character {
       //velocity = Vector2.all(0);
     }
 
-    if (other is Life && game.colisionMeteors > 0) {
+    if (other is Life && game.collisionMeteors > 0) {
       FlameAudio.play('explosion.wav');
-      game.colisionMeteors--;
+      game.collisionMeteors--;
       game.overlays.remove('Statistics');
       game.overlays.add('Statistics');
       other.removeFromParent();
@@ -332,12 +332,12 @@ class PlayerComponent extends Character {
       game.overlays.add('GameOver');
     }
 
-    if (game.colisionMeteors >= 3 && !inviciblePlayer) {
+    if (game.collisionMeteors >= 3 && !inviciblePlayer) {
       reset(dead: true);
       FlameAudio.play('die.mp3');
     }
 
-    super.onCollision(points, other);
+    super.onCollisionStart(points, other);
   }
 
   @override
@@ -352,7 +352,7 @@ class PlayerComponent extends Character {
     }
 
     if (other is MeteorComponent && !inviciblePlayer /*&& body.isColliding*/) {
-      game.colisionMeteors++;
+      game.collisionMeteors++;
       game.overlays.remove('Statistics');
       game.overlays.add('Statistics');
     }
@@ -393,7 +393,7 @@ class PlayerComponent extends Character {
       position = Vector2(spriteSheetWidth / 4, mapSize.y - spriteSheetHeight);
       size = Vector2(spriteSheetWidth / 4, spriteSheetHeight / 4);
     }
-    game.colisionMeteors = 0;
+    game.collisionMeteors = 0;
     game.addConsumibles();
 
     //position = Vector2(spriteSheetWidth / 4, 0);

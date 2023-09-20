@@ -21,21 +21,24 @@ class Character extends SpriteAnimationComponent
   double gravity = 15;
   Vector2 velocity = Vector2(0, 0);
 
-  final double spriteSheetWidth = 680, spriteSheetHeight = 472;
-  final double jumpForceUp = 600, jumpForceSide = 100, jumpForceXY = 20;
+  final double spriteSheetWidth = 680;
+  final double spriteSheetHeight = 472;
+  final double jumpForceUp = 600;
+  final double jumpForceSide = 100;
+  final double jumpForceXY = 20;
 
-  bool inGround = false,
-      jumpUp = false,
-      right = true,
-      collisionXRight = false,
-      collisionXLeft = false;
+  bool inGround = false;
+  bool jumpUp = false;
+  bool right = true;
+  bool collisionXRight = false;
+  bool collisionXLeft = false;
 
-  late SpriteAnimation deadAnimation,
-      idleAnimation,
-      jumpAnimation,
-      runAnimation,
-      walkAnimation,
-      walkSlowAnimation;
+  late SpriteAnimation deadAnimation;
+  late SpriteAnimation idleAnimation;
+  late SpriteAnimation jumpAnimation;
+  late SpriteAnimation runAnimation;
+  late SpriteAnimation walkAnimation;
+  late SpriteAnimation walkSlowAnimation;
 
   late RectangleHitbox body /*, foot*/;
 }

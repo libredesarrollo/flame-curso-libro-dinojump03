@@ -1,7 +1,6 @@
 import 'dart:math';
-import 'dart:ui';
 
-import 'package:flutter/material.dart';
+import 'package:flame/experimental.dart';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/flame.dart';
@@ -12,7 +11,7 @@ import 'package:flame/components.dart';
 import 'package:dinojump03/utils/create_animation_by_limit.dart';
 
 class MeteorComponent extends SpriteAnimationComponent
-    with CollisionCallbacks, HasGameRef {
+    with CollisionCallbacks, HasGameReference {
   Vector2 cameraPosition;
 
   MeteorComponent({required this.cameraPosition}) : super() {
@@ -21,23 +20,26 @@ class MeteorComponent extends SpriteAnimationComponent
   }
 
   static const int circleSpeed = 500;
-  static const double circleWidth = 100.0, circleHeight = 100.0;
+  static const double circleWidth = 100.0;
+  static const double circleHeight = 200.0;
 
   Random random = Random();
 
-  late double screenWidth, screenHeight;
+  late double screenWidth;
+  late double screenHeight;
 
   final ShapeHitbox hitbox = CircleHitbox();
 
-  final double spriteSheetWidth = 79, spriteSheetHeight = 100;
+  final double spriteSheetWidth = 461;
+  final double spriteSheetHeight = 996;
 
   @override
   Future<void>? onLoad() async {
     // screenWidth = MediaQueryData.fromWindow(window).size.width;
     // screenHeight = MediaQueryData.fromWindow(window).size.height;
 
-    screenWidth = gameRef.size.x;
-    screenHeight = gameRef.size.y;
+    screenWidth = game.size.x;
+    screenHeight = game.size.y;
 
     position = Vector2(random.nextDouble() * screenWidth + cameraPosition.x,
         cameraPosition.y - circleHeight);
@@ -45,6 +47,7 @@ class MeteorComponent extends SpriteAnimationComponent
 
     hitbox.paint.color = BasicPalette.green.color;
     hitbox.renderShape = false;
+    hitbox.position = Vector2(0, 50);
     hitbox.collisionType = CollisionType.passive;
 
     final spriteImage = await Flame.images.load('meteor.png');
@@ -54,7 +57,7 @@ class MeteorComponent extends SpriteAnimationComponent
 
     // init animation
     animation = spriteSheet.createAnimationByLimit(
-        xInit: 0, yInit: 0, step: 4, sizeX: 4, stepTime: .08);
+        xInit: 0, yInit: 0, step: 3, sizeX: 3, stepTime: .08);
 
     add(hitbox);
     // scale = Vector2.all(.5);

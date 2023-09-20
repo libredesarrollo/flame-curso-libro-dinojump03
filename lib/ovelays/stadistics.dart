@@ -20,7 +20,7 @@ class _StatisticsState extends State<Statistics> {
           Row(
             children: [
               Text(
-                'Count colision ${widget.game.colisionMeteors}',
+                'Count collision ${widget.game.collisionMeteors}',
                 style: const TextStyle(color: Colors.white, fontSize: 30),
               ),
               const Expanded(
@@ -30,7 +30,7 @@ class _StatisticsState extends State<Statistics> {
               GestureDetector(
                 onTap: () {
                   setState(() {
-                      widget.game.paused = !widget.game.paused;
+                    widget.game.paused = !widget.game.paused;
                   });
                 },
                 child: Icon(
@@ -42,7 +42,7 @@ class _StatisticsState extends State<Statistics> {
               GestureDetector(
                 onTap: () {
                   setState(() {
-                      widget.game.player.reset();
+                    widget.game.player.reset();
                   });
                 },
                 child: const Icon(
@@ -62,19 +62,19 @@ class _StatisticsState extends State<Statistics> {
                 width: 10,
               ),
               Icon(
-                widget.game.colisionMeteors >= 3
+                widget.game.collisionMeteors >= 3
                     ? Icons.favorite_border
                     : Icons.favorite,
                 color: Colors.red,
               ),
               Icon(
-                widget.game.colisionMeteors >= 2
+                widget.game.collisionMeteors >= 2
                     ? Icons.favorite_border
                     : Icons.favorite,
                 color: Colors.red,
               ),
               Icon(
-                widget.game.colisionMeteors >= 1
+                widget.game.collisionMeteors >= 1
                     ? Icons.favorite_border
                     : Icons.favorite,
                 color: Colors.red,
