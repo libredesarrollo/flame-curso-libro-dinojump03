@@ -4,7 +4,7 @@ import 'package:flame/components.dart';
 class Life extends SpriteComponent {
   Life({required position}) : super(position: position) {
     debugMode = true;
-    add(RectangleHitbox()..collisionType = CollisionType.active);
+    add(RectangleHitbox()..collisionType = CollisionType.passive);
   }
 
   @override
@@ -14,5 +14,3 @@ class Life extends SpriteComponent {
     return super.onLoad();
   }
 }
-
-
