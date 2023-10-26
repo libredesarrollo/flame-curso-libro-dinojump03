@@ -1,7 +1,5 @@
 import 'dart:math';
 
-import 'package:flame/experimental.dart';
-
 import 'package:flame/collisions.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/palette.dart';

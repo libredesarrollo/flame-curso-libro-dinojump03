@@ -1,5 +1,4 @@
 import 'package:dinojump03/main.dart';
-import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
 class GameOver extends StatefulWidget {

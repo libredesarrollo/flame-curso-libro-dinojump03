@@ -1,4 +1,3 @@
-//import 'package:tiled/tiled.dart';
 import 'package:dinojump03/consumibles/shield.dart';
 import 'package:dinojump03/consumibles/win.dart';
 import 'package:dinojump03/consumibles/life.dart';
