@@ -1,16 +1,48 @@
-# dinojump03
+# Dimo Jump 03 – Curso Flutter + Flame
 
-A new Flutter project.
+Un proyecto de base en Flutter que acompaña el curso “Libro Dinometeor” usando Flame, el motor de juegos para Flutter. Veremos como crear un juego en 2D con saltos, desplazamientos, colisiones, consumibles, daño y más.
 
-## Getting Started
+Este capítulo empezaremos creando la estructura de un sencillo juego en 2D de colisiones utilizando como base parte del código visto en el capítulo anterior.
+Acceso al curso y libro (disponible también en ingles):
 
-This project is a starting point for a Flutter application.
+https://www.desarrollolibre.net/blog/flutter/flame-desarrollo-de-juegos-en-2d-con-flutter
+https://www.desarrollolibre.net/libros/flutter-flame-desarrollo-de-juegos-en-2d
+---
 
-A few resources to get you started if this is your first Flutter project:
+##  Descripción
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Este repositorio sirve como punto de partida para el curso de desarrollo de videojuegos usando **Flutter** y la librería **Flame**. El proyecto llamado **dinometeor02** presenta una estructura inicial con multiplataforma habilitada (Android, iOS, Web, desktop) y está listo para integrar mecánicas de juego, assets y lógica del curso.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+##  Características
+
+- Proyecto Flutter generado con soporte para **Android**, **iOS**, **Web**, **Linux**, **macOS**, **Windows** :contentReference[oaicite:1]{index=1}  
+- Estructura organizada que incluye carpetas como:
+  - `lib/`: código principal en Dart
+  - `assets/images`: recursos visuales
+  - carpetas específicas por plataforma (`android/`, `ios/`, etc.)
+
+---
+
+##  Contenido actual del README base
+
+El README por defecto incluye:
+
+- Nombre del proyecto: `dinometeor02`  
+- Mensaje: *A new Flutter project*  
+- Instrucciones para iniciarse en Flutter, con enlaces al lab y cookbook oficiales :contentReference[oaicite:2]{index=2}
+
+---
+
+##  Cómo usar
+
+### Requisitos
+- Flutter SDK (versión recomendada: **>= 3.0.0**)
+- Dart SDK (incluido en Flutter)
+
+### Instalación
+```bash
+git clone https://github.com/libredesarrollo/flame-curso-libro-dinometeor-02.git
+cd flame-curso-libro-dinometeor-02
+flutter pub get
